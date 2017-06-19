@@ -36,7 +36,7 @@ public class ChangeScene2_3 : MonoBehaviour, IFocusable, IInputClickHandler
         GameObject hit = GazeManager.Instance.HitInfo.transform.gameObject;
         //GameObject.Find("StatusTxt").GetComponent<TextMesh>().text = hit.tag;
 
-        Application.LoadLevel("scene_3");
+        Application.LoadLevel("scene_5");
         //UnityEngine.SceneManagement.SceneManager.LoadScene("scene_3");
 
         //KneeExpandController

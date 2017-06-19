@@ -36,6 +36,18 @@ public class Hold2ChangeThreshold : MonoBehaviour, IInputHandler, IInputClickHan
 
     Vector3 lastScale;
 
+    Vector3 lastPosition;
+
+
+    [SerializeField]
+    float DragSpeed = 1.5f;
+
+    [SerializeField]
+    float DragScale = 1.5f;
+
+    [SerializeField]
+    float MaxDragDistance = 2f;
+
     public void SetResizing(bool enabled)
     {
         resizingEnabled = enabled;
@@ -71,7 +83,8 @@ public class Hold2ChangeThreshold : MonoBehaviour, IInputHandler, IInputClickHan
         this.GetComponent<Renderer>().material.color = Color.green;
         InputManager.Instance.PushModalInputHandler(gameObject);
         //lastScale = transform.parent.transform.localScale;
-
+        //InputManager.Instance.PushModalInputHandler(gameObject);
+        lastPosition = transform.position;
 
 
     }
@@ -232,17 +245,37 @@ public class Hold2ChangeThreshold : MonoBehaviour, IInputHandler, IInputClickHan
     }
 
 
-    public void ChangeThreshold(Vector3 e)
+    public void ChangeThreshold(Vector3 positon)
     {
-        if( e.x > 0.7f && e.x < 2.7f )
+        if(positon.x > 0.7f && positon.x < 2.7f )
         {
-            // move ball
-            gameObject.transform.localPosition = new Vector3(e.x, -3.5f, -2.03f);
+            // move ball x only 
+            positon.x = positon.x * DragScale;
+            var targetPosition = lastPosition + positon;
+            gameObject.transform.localPosition = new Vector3(positon.x, -3.5f, -2.03f);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, DragSpeed);
             // change DICOM threshold
             dicom_cube.setThreshold(gameObject.transform.localPosition.x / 2.7f);
 
+
+            log("moved");
+
+        } else
+        {
+            log("not moved");
         }
     }
+
+    //void Drag(Vector3 positon)
+    //{
+    //    var targetPosition = lastPosition + positon * DragScale;
+    //    if (Vector3.Distance(lastPosition, targetPosition) <= MaxDragDistance)
+    //    {
+    //        transform.position = Vector3.Lerp(transform.position, targetPosition, DragSpeed);
+    //    }
+    //}
+
+
 
     public void log(string str)
     {
