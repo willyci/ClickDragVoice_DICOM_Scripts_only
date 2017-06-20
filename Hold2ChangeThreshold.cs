@@ -217,53 +217,31 @@ public class Hold2ChangeThreshold : MonoBehaviour, IInputHandler, IInputClickHan
         //dicom.GetComponent<setThreshold>();
         dicom_cube.setThreshold(gameObject.transform.localPosition.x/2.7f);
         // log("clicked");
+
+        log(lastPosition.x.ToString());
     }
 
-    void Resize(Vector3 newScale)
-    {
-        //float resizeX, resizeY, resizeZ;
-        ////if we are warping, honor axis delta, else take the x
-        //if (AllowResizeWarp)
-        //{
-        //    resizeX = newScale.x * ResizeScaleFactor;
-        //    resizeY = newScale.y * ResizeScaleFactor;
-        //    resizeZ = newScale.z * ResizeScaleFactor;
-        //}
-        //else
-        //{
-        //    resizeX = resizeY = resizeZ = newScale.x * ResizeScaleFactor;
-        //}
 
-        //resizeX = Mathf.Clamp(lastScale.x + resizeX, MinScale, MaxScale);
-        //resizeY = Mathf.Clamp(lastScale.y + resizeY, MinScale, MaxScale);
-        //resizeZ = Mathf.Clamp(lastScale.z + resizeZ, MinScale, MaxScale);
-
-        //transform.parent.transform.localScale = Vector3.Lerp(transform.localScale,
-        //    new Vector3(resizeX, resizeY, resizeZ),
-        //    ResizeSpeedFactor);
-
-    }
 
 
     public void ChangeThreshold(Vector3 positon)
     {
-        if(positon.x > 0.7f && positon.x < 2.7f )
+        // move ball x only 
+        positon.x = positon.x * DragScale;
+        positon.y = 0f;
+        positon.z = 0f;
+
+        var targetPosition = lastPosition + positon;
+        // set min and max 
+        if ( targetPosition.x >= 0.65f && targetPosition.x <= 1.3f)
         {
-            // move ball x only 
-            positon.x = positon.x * DragScale;
-            var targetPosition = lastPosition + positon;
-            gameObject.transform.localPosition = new Vector3(positon.x, -3.5f, -2.03f);
             transform.position = Vector3.Lerp(transform.position, targetPosition, DragSpeed);
             // change DICOM threshold
-            dicom_cube.setThreshold(gameObject.transform.localPosition.x / 2.7f);
-
-
-            log("moved");
-
-        } else
-        {
-            log("not moved");
+            dicom_cube.setThreshold((transform.localPosition.x - 0.65f) / 0.65f);
         }
+
+
+
     }
 
     //void Drag(Vector3 positon)
